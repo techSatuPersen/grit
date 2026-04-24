@@ -654,13 +654,14 @@ function renderError() {
   // Support both ?passion=3.5 and ?p=3.5 shorthand
   const passion      = parseScore(params.get('passion')      ?? params.get('p'));
   const perseverance = parseScore(params.get('perseverance') ?? params.get('pe'));
-  const total        = parseScore(params.get('total')        ?? params.get('t'));
 
-  if (passion !== null && perseverance !== null && total !== null) {
+  if (passion !== null && perseverance !== null) {
+    const total = Math.round(((passion + perseverance) / 2) * 10) / 10;
     render(passion, perseverance, total);
   } else {
     // Demo mode — show example scores
-    render(3.2, 4.1, 3.6);
+    const total = Math.round(((3.2 + 4.1) / 2) * 10) / 10;
+    render(3.2, 4.1, total);
   }
 })();
 </script>
