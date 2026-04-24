@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hasil Tes Grit-mu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #141417;
+    --card: #1a1a1f;
+    --border: #2a2a32;
+    --accent-passion: #f97316;
+    --accent-perseverance: #6366f1;
+    --accent-total: #10b981;
+    --text: #f0eff4;
+    --muted: #6b6b80;
+    --highlight: #ffd166;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 10%, rgba(249,115,22,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 80% 90%, rgba(99,102,241,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 50% 50%, rgba(16,185,129,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .header .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 58px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--highlight) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* Score cards row */
+  .scores-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+
+  @media (max-width: 560px) {
+    .scores-row { grid-template-columns: 1fr; }
+  }
+
+  .score-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .score-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .score-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .score-card.passion::before { background: var(--accent-passion); }
+  .score-card.perseverance::before { background: var(--accent-perseverance); }
+  .score-card.total::before { background: var(--accent-total); }
+
+  .score-card.passion { border-color: rgba(249,115,22,0.2); }
+  .score-card.perseverance { border-color: rgba(99,102,241,0.2); }
+  .score-card.total { border-color: rgba(16,185,129,0.2); }
+
+  .score-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .score-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .score-card.passion .score-value { color: var(--accent-passion); }
+  .score-card.perseverance .score-value { color: var(--accent-perseverance); }
+  .score-card.total .score-value { color: var(--accent-total); }
+
+  .score-category {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+
+  .score-card.passion .score-category { background: rgba(249,115,22,0.15); color: var(--accent-passion); }
+  .score-card.perseverance .score-category { background: rgba(99,102,241,0.15); color: var(--accent-perseverance); }
+  .score-card.total .score-category { background: rgba(16,185,129,0.15); color: var(--accent-total); }
+
+  /* Progress bar */
+  .progress-wrap {
+    margin-top: 14px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 100px;
+    height: 4px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+
+  .score-card.passion .progress-bar { background: var(--accent-passion); }
+  .score-card.perseverance .progress-bar { background: var(--accent-perseverance); }
+  .score-card.total .progress-bar { background: var(--accent-total); }
+
+  /* Interpretation sections */
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .section:nth-child(1) { animation-delay: 0.25s; }
+  .section:nth-child(2) { animation-delay: 0.35s; }
+  .section:nth-child(3) { animation-delay: 0.45s; }
+  .section:nth-child(4) { animation-delay: 0.55s; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .section-icon.orange { background: rgba(249,115,22,0.15); }
+  .section-icon.indigo { background: rgba(99,102,241,0.15); }
+  .section-icon.green { background: rgba(16,185,129,0.15); }
+  .section-icon.yellow { background: rgba(255,209,102,0.15); }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .section-subtitle {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .interp-block {
+    background: rgba(255,255,255,0.03);
+    border-left: 3px solid var(--border);
+    border-radius: 0 10px 10px 0;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+
+  .interp-block:last-child { margin-bottom: 0; }
+
+  .interp-block h4 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .interp-block p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #c8c8d8;
+  }
+
+  .interp-block.highlight {
+    background: rgba(255,209,102,0.05);
+    border-left-color: var(--highlight);
+  }
+
+  .interp-block.highlight h4 { color: var(--highlight); }
+
+  /* Dev tips */
+  .dev-tip {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dev-tip:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .dev-tip-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .dev-tip p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #c8c8d8;
+  }
+
+  .dev-tip p strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* Loading state */
+  .loading {
+    text-align: center;
+    padding: 80px 0;
+  }
+
+  .loading-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 4px;
+    animation: pulse 1.4s ease infinite;
+  }
+
+  .loading-dot:nth-child(1) { background: var(--accent-passion); animation-delay: 0s; }
+  .loading-dot:nth-child(2) { background: var(--accent-perseverance); animation-delay: 0.2s; }
+  .loading-dot:nth-child(3) { background: var(--accent-total); animation-delay: 0.4s; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    color: var(--muted);
+    font-size: 13px;
+    animation: fadeUp 0.8s 0.6s ease both;
+  }
+
+  .footer a {
+    color: var(--highlight);
+    text-decoration: none;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Badge */
+  .category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .badge-low { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+  .badge-medium { background: rgba(234,179,8,0.15); color: #facc15; border: 1px solid rgba(234,179,8,0.2); }
+  .badge-high { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+
+  .error-state {
+    text-align: center;
+    padding: 80px 24px;
+  }
+
+  .error-state h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .error-state p {
+    color: var(--muted);
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <div class="loading">
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA: Interpretations
+// ─────────────────────────────────────────────
+const interpretations = {
+  passion: {
+    low: {
+      label: "Eksplorasi",
+      desc: "Kamu sedang dalam fase eksplorasi yang kuat. Minatmu cenderung baru dan bisa berubah-ubah — kamu mungkin menikmati banyak hal berbeda tanpa harus berkomitmen pada satu hal.",
+      daily: "Kamu mungkin sering mencoba hobi baru, berganti-ganti proyek, atau belum yakin tentang jalur karier jangka panjangmu. Ini adalah fase penemuan yang penting.",
+      tip: "Teruslah bereksplorasi, tapi coba tanyakan: \"Dari semua yang aku coba, aktivitas apa yang paling membuatku lupa waktu?\" Ini bisa menjadi petunjuk minat yang lebih dalam."
+    },
+    medium: {
+      label: "Berkembang",
+      desc: "Kamu sudah memiliki beberapa minat yang cukup jelas, namun terkadang masih tertarik pada hal-hal baru yang bisa mengalihkan fokus. Kamu tahu apa yang kamu suka, tapi mungkin belum sepenuhnya berkomitmen pada satu tujuan utama.",
+      daily: "Kamu mungkin memiliki satu atau dua hobi utama, tapi masih terbuka mencoba hal lain. Dalam karier, kamu sudah nyaman di bidangmu tapi masih melirik peluang lain.",
+      tip: "Coba hubungkan titik-titik di antara minatmu. Adakah tema umum yang mendasarinya? Memahami \"mengapa\" di balik minatmu dapat membantu memperkuatnya."
+    },
+    high: {
+      label: "Konsisten",
+      desc: "Kamu memiliki arah tujuan yang sangat kuat. Minat dan tujuanmu cenderung konsisten dan tidak mudah goyah oleh tren atau distraksi baru. Kamu tahu apa yang ingin dicapai dalam jangka panjang.",
+      daily: "Kamu mungkin sudah menekuni hobi atau karier yang sama selama bertahun-tahun, dan terus menemukan cara baru untuk menjadi lebih baik di bidang tersebut.",
+      tip: "Pastikan minatmu yang kuat tidak membuatmu menutup diri dari ide-ide baru. Kolaborasi dengan orang dari bidang lain bisa memberikan perspektif segar yang memperkaya tujuan utamamu."
+    }
+  },
+  perseverance: {
+    low: {
+      label: "Masih Melatih",
+      desc: "Kamu cenderung mudah beralih fokus saat menghadapi kesulitan atau kebosanan. Kamu mungkin memulai banyak hal dengan antusias, namun kesulitan melanjutkannya saat tantangan muncul.",
+      daily: "Kamu mungkin memiliki beberapa proyek yang belum selesai. Saat sebuah tugas menjadi sulit, kamu berpikir ada cara lain yang \"lebih baik\" atau \"lebih mudah\".",
+      tip: "Latih kegigihanmu dengan proyek kecil. Berkomitmenlah menyelesaikan satu tugas kecil setiap hari, tidak peduli betapapun membosankannya. Ini membangun kebiasaan untuk tidak menyerah."
+    },
+    medium: {
+      label: "Tangguh",
+      desc: "Kamu adalah seorang pekerja keras dan bisa bertahan melewati kesulitan. Namun, kemunduran besar atau kegagalan berulang kali bisa membuatmu frustrasi dan mempertanyakan usahamu.",
+      daily: "Kamu menyelesaikan sebagian besar tugasmu, tapi mungkin menunda-nunda tugas yang paling sulit. Semangatmu bisa naik-turun tergantung kemajuan yang kamu lihat.",
+      tip: "Adopsi Growth Mindset. Lihatlah kemunduran bukan sebagai kegagalan, tetapi sebagai umpan balik berharga. Tanyakan \"Apa yang bisa aku pelajari dari sini?\" daripada \"Mengapa ini terjadi padaku?\"."
+    },
+    high: {
+      label: "Sangat Tangguh",
+      desc: "Kamu sangat tangguh. Bagimu, rintangan adalah bagian tak terpisahkan dari perjalanan. Kamu tidak melihat kemunduran sebagai alasan untuk berhenti — kamu melihatnya sebagai masalah yang perlu dipecahkan.",
+      daily: "Kamu dikenal sebagai orang yang tidak pernah menyerah. Kamu akan bekerja tanpa lelah untuk mengatasi masalah dan selalu menyelesaikan apa yang telah dimulai.",
+      tip: "Kegigihanmu luar biasa, tapi pastikan tidak terjebak dalam \"kerja keras buta\". Rutin bertanya: \"Apakah strategi yang aku gunakan masih yang paling efektif?\" Berhenti sejenak untuk berpikir adalah langkah paling produktif."
+    }
+  },
+  total: {
+    low: {
+      label: "Grit Rendah",
+      emoji: "🌱",
+      desc: "Kamu saat ini mungkin berada dalam fase eksplorasi yang kuat dan/atau cenderung beralih fokus saat menghadapi kesulitan. Ini bukan hal yang buruk — ini tanda bahwa kamu sedang mencari apa yang benar-benar penting bagimu.",
+      focus: "Tujuan utamamu saat ini adalah menemukan minat yang memicu rasa ingin tahu dan melatih kemampuan kegigihanmu pada tantangan-tantangan kecil."
+    },
+    medium: {
+      label: "Grit Sedang",
+      emoji: "🔥",
+      desc: "Kamu memiliki keseimbangan yang baik antara memiliki minat yang jelas dan kemampuan untuk bekerja keras. Kamu berada di jalur yang solid untuk membangun grit yang luar biasa.",
+      focus: "Identifikasi mana yang lebih rendah: Minat atau Kegigihanmu. Perkuat yang lebih rendah — jika Minat, komit lebih dalam pada tujuanmu; jika Kegigihan, bangun ketangguhan saat menghadapi kemunduran."
+    },
+    high: {
+      label: "Grit Tinggi",
+      emoji: "⚡",
+      desc: "Kamu adalah individu dengan Grit yang sangat tinggi. Kamu tidak hanya tahu apa yang kamu inginkan, tetapi juga memiliki ketangguhan untuk mengejarnya tanpa lelah. Kamu berkomitmen pada tujuan jangka panjang.",
+      focus: "Tantangan terbesarmu adalah menghindari burnout dan memastikan strategimu tetap efektif. Ingatlah untuk beristirahat dan tetap terbuka terhadap cara-cara baru untuk mencapai tujuanmu."
+    }
+  }
+};
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function getCategory(score) {
+  if (score < 2.5) return 'low';
+  if (score <= 3.5) return 'medium';
+  return 'high';
+}
+
+function getCategoryLabel(cat) {
+  return { low: 'Rendah', medium: 'Sedang', high: 'Tinggi' }[cat];
+}
+
+function getCategoryBadgeClass(cat) {
+  return { low: 'badge-low', medium: 'badge-medium', high: 'badge-high' }[cat];
+}
+
+function pct(score) {
+  return Math.round(((score - 1) / 4) * 100);
+}
+
+function parseScore(val) {
+  const n = parseFloat(val);
+  return (!isNaN(n) && n >= 1 && n <= 5) ? n : null;
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function render(passion, perseverance, total) {
+  const pc = getCategory(passion);
+  const pec = getCategory(perseverance);
+  const tc = getCategory(total);
+
+  const pi = interpretations.passion[pc];
+  const pei = interpretations.perseverance[pec];
+  const ti = interpretations.total[tc];
+
+  document.getElementById('app').innerHTML = `
+    <div class="header">
+      <p class="eyebrow">Tes Grit · Angela Duckworth</p>
+      <h1>Hasil Grit-mu</h1>
+      <p>Grit adalah kombinasi dari <strong>minat</strong> dan <strong>kegigihan</strong> — salah satu prediktor kesuksesan jangka panjang yang paling kuat.</p>
+    </div>
+
+    <!-- SCORE CARDS -->
+    <div class="scores-row">
+      <div class="score-card passion">
+        <div class="score-label">Passion (Minat)</div>
+        <div class="score-value">${passion.toFixed(1)}</div>
+        <div class="score-category">${getCategoryLabel(pc)}</div>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="bar-passion" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="score-card perseverance">
+        <div class="score-label">Perseverance</div>
+        <div class="score-value">${perseverance.toFixed(1)}</div>
+        <div class="score-category">${getCategoryLabel(pec)}</div>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="bar-perseverance" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="score-card total">
+        <div class="score-label">Total Grit</div>
+        <div class="score-value">${total.toFixed(1)}</div>
+        <div class="score-category">${getCategoryLabel(tc)}</div>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="bar-total" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOTAL INTERPRETATION -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon yellow">${ti.emoji}</div>
+        <div>
+          <div class="section-title">Skor Grit Total: ${ti.label}</div>
+          <div class="section-subtitle">Gambaran keseluruhan kombinasi Minat & Kegigihan</div>
+        </div>
+      </div>
+      <span class="category-badge ${getCategoryBadgeClass(tc)}">${getCategoryLabel(tc)} · ${total.toFixed(1)} / 5.0</span>
+      <div class="interp-block highlight">
+        <h4>📋 Deskripsi</h4>
+        <p>${ti.desc}</p>
+      </div>
+      <div class="interp-block">
+        <h4>🎯 Fokus Pengembangan</h4>
+        <p>${ti.focus}</p>
+      </div>
+    </div>
+
+    <!-- PASSION -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon orange">🔥</div>
+        <div>
+          <div class="section-title">Passion (Minat): ${pi.label}</div>
+          <div class="section-subtitle">Konsistensi tujuan & minatmu dari waktu ke waktu</div>
+        </div>
+      </div>
+      <span class="category-badge ${getCategoryBadgeClass(pc)}">${getCategoryLabel(pc)} · ${passion.toFixed(1)} / 5.0</span>
+      <div class="interp-block">
+        <h4>📋 Deskripsi</h4>
+        <p>${pi.desc}</p>
+      </div>
+      <div class="interp-block">
+        <h4>🌱 Manifestasi Keseharian</h4>
+        <p>${pi.daily}</p>
+      </div>
+      <div class="interp-block highlight">
+        <h4>💡 Saran Pengembangan</h4>
+        <p>${pi.tip}</p>
+      </div>
+    </div>
+
+    <!-- PERSEVERANCE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon indigo">💪</div>
+        <div>
+          <div class="section-title">Perseverance: ${pei.label}</div>
+          <div class="section-subtitle">Ketangguhanmu dalam menghadapi rintangan & kemunduran</div>
+        </div>
+      </div>
+      <span class="category-badge ${getCategoryBadgeClass(pec)}">${getCategoryLabel(pec)} · ${perseverance.toFixed(1)} / 5.0</span>
+      <div class="interp-block">
+        <h4>📋 Deskripsi</h4>
+        <p>${pei.desc}</p>
+      </div>
+      <div class="interp-block">
+        <h4>🌱 Manifestasi Keseharian</h4>
+        <p>${pei.daily}</p>
+      </div>
+      <div class="interp-block highlight">
+        <h4>💡 Saran Pengembangan</h4>
+        <p>${pei.tip}</p>
+      </div>
+    </div>
+
+    <!-- BUILDING GRIT -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon green">🚀</div>
+        <div>
+          <div class="section-title">Membangun Grit-mu</div>
+          <div class="section-subtitle">Grit bisa dilatih dan dikembangkan</div>
+        </div>
+      </div>
+      <div class="dev-tip">
+        <div class="dev-tip-num">1</div>
+        <p><strong>Untuk Passion:</strong> "Aktivitas apa yang benar-benar aku nikmati? Bagaimana aku bisa menghubungkan aktivitas itu dengan sesuatu yang bermanfaat bagi orang lain?"</p>
+      </div>
+      <div class="dev-tip">
+        <div class="dev-tip-num">2</div>
+        <p><strong>Untuk Perseverance:</strong> "Saat aku merasa ingin menyerah, apa satu langkah terkecil yang masih bisa aku lakukan untuk tetap maju?"</p>
+      </div>
+      <div class="dev-tip">
+        <div class="dev-tip-num">3</div>
+        <p><strong>Kombinasi Keduanya:</strong> "Bagaimana aku bisa menerapkan kegigihanku pada minat yang paling penting bagiku?"</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Berdasarkan teori Grit oleh <strong>Angela Duckworth</strong></p>
+    </div>
+  `;
+
+  // Animate progress bars after render
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.getElementById('bar-passion').style.width = pct(passion) + '%';
+      document.getElementById('bar-perseverance').style.width = pct(perseverance) + '%';
+      document.getElementById('bar-total').style.width = pct(total) + '%';
+    }, 300);
+  });
+}
+
+function renderError() {
+  document.getElementById('app').innerHTML = `
+    <div class="error-state">
+      <h2>Skor tidak ditemukan</h2>
+      <p>Halaman ini perlu dibuka setelah menyelesaikan tes Grit.<br>Pastikan URL mengandung parameter <code>passion</code>, <code>perseverance</code>, dan <code>total</code>.</p>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────
+// INIT: Read URL params
+// ─────────────────────────────────────────────
+(function init() {
+  const params = new URLSearchParams(window.location.search);
+
+  // Support both ?passion=3.5 and ?p=3.5 shorthand
+  const passion      = parseScore(params.get('passion')      ?? params.get('p'));
+  const perseverance = parseScore(params.get('perseverance') ?? params.get('pe'));
+  const total        = parseScore(params.get('total')        ?? params.get('t'));
+
+  if (passion !== null && perseverance !== null && total !== null) {
+    render(passion, perseverance, total);
+  } else {
+    // Demo mode — show example scores
+    render(3.2, 4.1, 3.6);
+  }
+})();
+</script>
+</body>
+</html>
