@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tes Kepribadian OCEAN (Big Five) · Satu Persen</title>
+<meta name="description" content="Ketahui profil kepribadian Big Five (OCEAN) Anda: Openness, Conscientiousness, Extraversion, Agreeableness, dan Neuroticism dengan analisis psikometri mendalam.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #141417;
+    --card: #1a1a1f;
+    --card-hover: #22222a;
+    --border: #2a2a32;
+    --border-light: rgba(255, 255, 255, 0.08);
+    --text: #f0eff4;
+    --text-muted: #8e8ea0;
+    --muted: #6b6b80;
+    --highlight: #ffd166;
+    
+    /* Trait Colors */
+    --color-o: #8b5cf6; /* Openness - Violet */
+    --color-c: #10b981; /* Conscientiousness - Emerald */
+    --color-e: #f59e0b; /* Extraversion - Amber */
+    --color-a: #06b6d4; /* Agreeableness - Cyan */
+    --color-n: #f43f5e; /* Neuroticism - Rose */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* Ambient glowing gradients */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 65% 45% at 15% 10%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 55% at 85% 20%, rgba(6, 182, 212, 0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 75% 85%, rgba(244, 63, 94, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 20% 90%, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Top Navigation Bar */
+  .nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(13, 13, 15, 0.85);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-brand-badge {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(255, 209, 102, 0.15);
+    color: var(--highlight);
+    border: 1px solid rgba(255, 209, 102, 0.25);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-link.active {
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+
+  /* Main Container */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .header .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .header .eyebrow span {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-o);
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(34px, 5.5vw, 54px);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 18px;
+    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 40%, var(--highlight) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header p {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 580px;
+    margin: 0 auto 20px;
+    line-height: 1.7;
+  }
+
+  .meta-pills {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .meta-pill {
+    font-size: 12px;
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 100px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Progress tracker */
+  .sticky-progress {
+    position: sticky;
+    top: 61px;
+    z-index: 90;
+    background: rgba(20, 20, 23, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 20px;
+    margin-bottom: 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-o), var(--color-c), var(--color-e));
+    border-radius: 10px;
+    transition: width 0.3s ease;
+  }
+
+  /* Question Cards */
+  .questions-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px 26px;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .question-card:hover {
+    border-color: rgba(255, 255, 255, 0.16);
+    background: var(--card-hover);
+  }
+
+  .question-card.answered {
+    border-color: rgba(16, 185, 129, 0.25);
+  }
+
+  .question-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .q-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  .question-card.answered .q-num {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--color-c);
+  }
+
+  .q-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+    padding-top: 3px;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  @media (max-width: 680px) {
+    .options-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .option-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    min-height: 52px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    text-align: center;
+  }
+
+  @media (max-width: 680px) {
+    .option-label {
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 12px 16px;
+    }
+  }
+
+  .option-label:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .option-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .option-input:focus-visible + .option-label {
+    outline: 2px solid var(--highlight);
+    outline-offset: 2px;
+  }
+
+  .option-input:checked + .option-label {
+    background: rgba(255, 209, 102, 0.12);
+    border-color: var(--highlight);
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(255, 209, 102, 0.15);
+  }
+
+  .option-text {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .option-input:checked + .option-label .option-text {
+    color: var(--highlight);
+    font-weight: 700;
+  }
+
+  .option-val {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  /* Submit action area */
+  .actions-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 40px;
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, #ffd166 0%, #f59e0b 100%);
+    color: #111114;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 16px 36px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(245, 158, 11, 0.35);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-demo {
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-demo:hover {
+    color: var(--text);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  /* ─────────────────────────────────────────────
+     RESULTS VIEW STYLING
+     ───────────────────────────────────────────── */
+  .archetype-banner {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    border-radius: 24px;
+    padding: 36px 32px;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .archetype-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 209, 102, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .archetype-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--highlight);
+    margin-bottom: 12px;
+  }
+
+  .archetype-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 4.5vw, 40px);
+    font-weight: 900;
+    color: #ffffff;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .archetype-desc {
+    color: #d1d5db;
+    font-size: 15px;
+    max-width: 640px;
+    margin: 0 auto 20px;
+    line-height: 1.7;
+  }
+
+  .dominant-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .dominant-pill {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Radar Chart Section */
+  .radar-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 32px;
+    margin-bottom: 40px;
+    text-align: center;
+    position: relative;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .radar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .radar-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .radar-svg-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .radar-svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* 5 Trait Score Cards */
+  .traits-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  @media (max-width: 800px) {
+    .traits-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .traits-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .trait-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+
+  .trait-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .trait-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .trait-card.trait-o::before { background: var(--color-o); }
+  .trait-card.trait-c::before { background: var(--color-c); }
+  .trait-card.trait-e::before { background: var(--color-e); }
+  .trait-card.trait-a::before { background: var(--color-a); }
+  .trait-card.trait-n::before { background: var(--color-n); }
+
+  .trait-card.trait-o { border-color: rgba(139, 92, 246, 0.2); }
+  .trait-card.trait-c { border-color: rgba(16, 185, 129, 0.2); }
+  .trait-card.trait-e { border-color: rgba(245, 158, 11, 0.2); }
+  .trait-card.trait-a { border-color: rgba(6, 182, 212, 0.2); }
+  .trait-card.trait-n { border-color: rgba(244, 63, 94, 0.2); }
+
+  .trait-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .trait-card.trait-o .trait-letter { background: rgba(139, 92, 246, 0.15); color: var(--color-o); }
+  .trait-card.trait-c .trait-letter { background: rgba(16, 185, 129, 0.15); color: var(--color-c); }
+  .trait-card.trait-e .trait-letter { background: rgba(245, 158, 11, 0.15); color: var(--color-e); }
+  .trait-card.trait-a .trait-letter { background: rgba(6, 182, 212, 0.15); color: var(--color-a); }
+  .trait-card.trait-n .trait-letter { background: rgba(244, 63, 94, 0.15); color: var(--color-n); }
+
+  .trait-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .trait-indonesian {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .trait-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .trait-card.trait-o .trait-score { color: var(--color-o); }
+  .trait-card.trait-c .trait-score { color: var(--color-c); }
+  .trait-card.trait-e .trait-score { color: var(--color-e); }
+  .trait-card.trait-a .trait-score { color: var(--color-a); }
+  .trait-card.trait-n .trait-score { color: var(--color-n); }
+
+  .level-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+
+  .badge-low { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+  .badge-medium { background: rgba(234, 179, 8, 0.15); color: #facc15; }
+  .badge-high { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+
+  .mini-progress {
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    height: 4px;
+    overflow: hidden;
+  }
+
+  .mini-progress-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .trait-card.trait-o .mini-progress-bar { background: var(--color-o); }
+  .trait-card.trait-c .mini-progress-bar { background: var(--color-c); }
+  .trait-card.trait-e .mini-progress-bar { background: var(--color-e); }
+  .trait-card.trait-a .mini-progress-bar { background: var(--color-a); }
+  .trait-card.trait-n .mini-progress-bar { background: var(--color-n); }
+
+  /* In-depth Interpretation Sections */
+  .section-detail {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .section-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .blocks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  @media (max-width: 680px) {
+    .blocks-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .info-box {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid var(--border);
+    border-radius: 0 10px 10px 0;
+    padding: 18px 20px;
+  }
+
+  .info-box.highlight {
+    background: rgba(255, 209, 102, 0.05);
+    border-left-color: var(--highlight);
+  }
+
+  .info-box h4 {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .info-box.highlight h4 {
+    color: var(--highlight);
+  }
+
+  .info-box p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #c8c8d8;
+  }
+
+  /* Share & Action Toolbar */
+  .share-toolbar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .btn-share {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 22px;
+    border-radius: 100px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-share:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .btn-retake {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+  }
+
+  .btn-retake:hover {
+    color: var(--text);
+  }
+
+  /* Toast notification */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #1e1e24;
+    color: #ffffff;
+    border: 1px solid var(--border);
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .footer a {
+    color: var(--highlight);
+    text-decoration: none;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAVIGATION BAR -->
+<nav class="nav-bar" aria-label="Navigasi Utama">
+  <div class="nav-container">
+    <a href="#" class="nav-brand">
+      Satu Persen Tests
+      <span class="nav-brand-badge">Psikometri</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Tes Grit</a>
+      <a href="ocean.html" class="nav-link active">Tes OCEAN (Big Five)</a>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN APP CONTAINER -->
+<main class="container" id="app">
+  <!-- Dynamic content will be injected by JavaScript -->
+</main>
+
+<!-- TOAST -->
+<div id="toast" class="toast" role="status" aria-live="polite">
+  <span>Link hasil berhasil disalin ke clipboard!</span>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA: QUESTIONS (Mini-IPIP / Big Five Inventory - 20 Items)
+// ─────────────────────────────────────────────
+const questions = [
+  // OPENNESS (O)
+  { id: 1, trait: 'O', text: 'Saya memiliki imajinasi yang hidup dan kaya ide-ide kreatif.', isReverse: false },
+  { id: 2, trait: 'O', text: 'Saya tertarik mendalami konsep abstrak, pemikiran filosofis, atau teori baru.', isReverse: false },
+  { id: 3, trait: 'O', text: 'Saya sangat mengapresiasi keindahan seni, musik, sastra, atau alam sekitar.', isReverse: false },
+  { id: 4, trait: 'O', text: 'Saya lebih menyukai hal-hal praktis dan rutinitas daripada konsep teoritis atau eksplorasi hal asing.', isReverse: true },
+
+  // CONSCIENTIOUSNESS (C)
+  { id: 5, trait: 'C', text: 'Saya selalu berusaha menyelesaikan setiap pekerjaan sampai tuntas dengan standar yang baik.', isReverse: false },
+  { id: 6, trait: 'C', text: 'Saya teratur, disiplin, dan terbiasa membuat perencanaan jelas sebelum bertindak.', isReverse: false },
+  { id: 7, trait: 'C', text: 'Saya dapat diandalkan dan selalu bertanggung jawab terhadap komitmen atau janji yang dibuat.', isReverse: false },
+  { id: 8, trait: 'C', text: 'Saya sering menunda pekerjaan atau bertindak secara spontan tanpa perhitungan matang.', isReverse: true },
+
+  // EXTRAVERSION (E)
+  { id: 9, trait: 'E', text: 'Saya merasa berenergi, antusias, dan bersemangat saat berada di tengah keramaian atau acara sosial.', isReverse: false },
+  { id: 10, trait: 'E', text: 'Saya mudah memulai obrolan dan menjalin koneksi dengan orang-orang yang baru dikenal.', isReverse: false },
+  { id: 11, trait: 'E', text: 'Saya percaya diri mengutarakan gagasan dan mengambil peran memimpin dalam kelompok.', isReverse: false },
+  { id: 12, trait: 'E', text: 'Saya cenderung pendiam, lebih menikmati waktu menyendiri, dan cepat lelah jika terlalu lama berinteraksi.', isReverse: true },
+
+  // AGREEABLENESS (A)
+  { id: 13, trait: 'A', text: 'Saya mudah berempati dan tulus peduli terhadap kesulitan atau perasaan orang lain.', isReverse: false },
+  { id: 14, trait: 'A', text: 'Saya cenderung menaruh rasa percaya dan berprasangka baik pada niat orang lain.', isReverse: false },
+  { id: 15, trait: 'A', text: 'Saya mengutamakan kerjasama, kehangatan, dan menjaga keharmonisan hubungan di atas persaingan.', isReverse: false },
+  { id: 16, trait: 'A', text: 'Saya terkadang bersikap skeptis, mudah mengkritik, atau mendebat pendapat orang lain secara tajam.', isReverse: true },
+
+  // NEUROTICISM (N)
+  { id: 17, trait: 'N', text: 'Saya mudah merasa cemas, gelisah, atau overthinking saat menghadapi ketidakpastian.', isReverse: false },
+  { id: 18, trait: 'N', text: 'Suasana hati (mood) saya mudah berubah-ubah dan sangat dipengaruhi oleh dinamika di sekitar.', isReverse: false },
+  { id: 19, trait: 'N', text: 'Saya sering merasa tegang, tertekan, atau kewalahan ketika beban tugas menumpuk.', isReverse: false },
+  { id: 20, trait: 'N', text: 'Saya mampu tetap tenang, rileks, dan tidak mudah panik bahkan dalam situasi krisis atau penuh tekanan.', isReverse: true }
+];
+
+const likertOptions = [
+  { val: 1, label: 'Sangat Tidak Setuju' },
+  { val: 2, label: 'Tidak Setuju' },
+  { val: 3, label: 'Netral' },
+  { val: 4, label: 'Setuju' },
+  { val: 5, label: 'Sangat Setuju' }
+];
+
+// ─────────────────────────────────────────────
+// DATA: TRAIT INTERPRETATIONS
+// ─────────────────────────────────────────────
+const traitMeta = {
+  O: {
+    code: 'O',
+    name: 'Openness to Experience',
+    indonesian: 'Keterbukaan Pengalaman',
+    color: 'var(--color-o)',
+    icon: '💡',
+    levels: {
+      low: {
+        label: 'Pragmatis & Konvensional',
+        summary: 'Anda menyukai kepastian, hal-hal nyata, metode yang sudah terbukti, dan kenyamanan rutinitas.',
+        daily: 'Sangat andal dalam mengeksekusi rencana terstruktur, membumi, dan tidak mudah terdistraksi oleh spekulasi yang belum jelas.',
+        superpower: 'Konsistensi tinggi, efisiensi praktis, dan ketahanan dalam alur kerja rutin.',
+        blindspot: 'Bisa merasa enggan atau cemas saat harus beradaptasi dengan perubahan mendadak atau ide-ide eksperimental.',
+        tip: 'Cobalah sekali sepekan mengeksplorasi hal kecil di luar kebiasaan, seperti membaca topik baru atau rute jalan berbeda.'
+      },
+      medium: {
+        label: 'Adaptif & Berimbang',
+        summary: 'Anda memiliki keseimbangan yang sehat antara rasa ingin tahu terhadap hal baru dan kepraktisan hidup sehari-hari.',
+        daily: 'Terbuka mencoba metode baru jika terbukti ada nilainya, namun tetap menghormati tata cara yang telah berjalan.',
+        superpower: 'Mampu menjembatani ide-ide kreatif tim dengan realitas eksekusi praktis.',
+        blindspot: 'Terkadang ragu apakah harus terus bereksperimen atau segera mengunci satu pilihan yang aman.',
+        tip: 'Buat batasan waktu: alokasikan waktu khusus untuk eksplorasi ide, kemudian kunci keputusan untuk eksekusi.'
+      },
+      high: {
+        label: 'Visioner & Kreatif',
+        summary: 'Anda memiliki imajinasi kaya, rasa ingin tahu intelektual tinggi, serta apresiasi mendalam terhadap keindahan dan inovasi.',
+        daily: 'Suka memikirkan konsep masa depan, tertarik pada filosofi, seni, dan senang menantang status quo.',
+        superpower: 'Pencetus ide orisinal, pemikir strategis *out-of-the-box*, dan sangat adaptif terhadap dinamika baru.',
+        blindspot: 'Cenderung mudah bosan dengan eksekusi rutin atau detail administratif yang berulang.',
+        tip: 'Gandeng rekan kerja yang kuat dalam eksekusi (Conscientiousness tinggi) agar gagasan brilian Anda dapat terwujud nyata.'
+      }
+    }
+  },
+  C: {
+    code: 'C',
+    name: 'Conscientiousness',
+    indonesian: 'Kehati-hatian & Disiplin',
+    color: 'var(--color-c)',
+    icon: '🎯',
+    levels: {
+      low: {
+        label: 'Spontan & Fleksibel',
+        summary: 'Anda fleksibel, santai, menyukai kebebasan tanpa jadwal ketat, dan nyaman dengan spontanitas.',
+        daily: 'Bisa beradaptasi dengan situasi tak terduga dengan santai, namun mungkin sering menunda tugas terstruktur.',
+        superpower: 'Tinggi fleksibilitas, tidak kaku saat rencana berantakan, dan mampu berimprovisasi dengan cepat.',
+        blindspot: 'Rentan lupa tenggat waktu atau kesulitan menyelesaikan proyek berjangka panjang yang menuntut konsistensi.',
+        tip: 'Gunakan teknik manajemen waktu sederhana seperti time-blocking 25 menit (Pomodoro) dan checklist 3 prioritas harian.'
+      },
+      medium: {
+        label: 'Terencana & Luwes',
+        summary: 'Anda mampu bekerja dengan target dan disiplin yang cukup baik, tanpa kehilangan keluwesan untuk menikmati hidup.',
+        daily: 'Menyelesaikan tanggung jawab utama tepat waktu, namun tetap santai menghadapi perubahan agenda mendadak.',
+        superpower: 'Keseimbangan antara produktivitas dan kenyamanan mental tanpa terlalu membebani diri sendiri.',
+        blindspot: 'Bisa kehilangan fokus jika tekanan bertambah secara simultan dari berbagai sisi.',
+        tip: 'Evaluasi mingguan ritme kerja Anda untuk memastikan komitmen prioritas tetap terjaga dengan rapi.'
+      },
+      high: {
+        label: 'Sangat Teratur & Berorientasi Target',
+        summary: 'Anda adalah pribadi yang disiplin tinggi, terorganisir rapi, andal, dan memiliki standar kualitas yang ketat.',
+        daily: 'Selalu membuat perencanaan matang, menepati janji, dan tidak tenang sebelum tugas tuntas secara paripurna.',
+        superpower: 'Eksekutor andal, berintegritas tinggi, dan prediktor terkuat kesuksesan akademis maupun karier profesional.',
+        blindspot: 'Rentan terhadap perfeksionisme berlebihan, stres saat rencana meleset, dan sulit mendelegasikan tugas.',
+        tip: 'Latih toleransi terhadap ketidaksempurnaan; terkadang "selesai dan cukup baik" lebih bijak daripada "sempurna tapi terlambat".'
+      }
+    }
+  },
+  E: {
+    code: 'E',
+    name: 'Extraversion',
+    indonesian: 'Ekstraversi & Energi Sosial',
+    color: 'var(--color-e)',
+    icon: '⚡',
+    levels: {
+      low: {
+        label: 'Introvert & Reflektif',
+        summary: 'Anda mengisi ulang energi melalui ketenangan, perenungan mendalam, dan interaksi yang intim dalam lingkaran kecil.',
+        daily: 'Pendengar yang penuh perhatian, lebih nyaman mengamati sebelum berbicara, dan menikmati waktu kesendirian produktif.',
+        superpower: 'Kemampuan konsentrasi mendalam (*deep work*), pemikiran reflektif, dan percakapan berkualitas berbobot.',
+        blindspot: 'Bisa tampak berjarak atau enggan menyuarakan keahliannya di depan forum publik yang ramai.',
+        tip: 'Gunakan komunikasi tertulis sebagai kekuatan utama, dan sediakan waktu jeda (*recharge*) setelah acara sosial yang panjang.'
+      },
+      medium: {
+        label: 'Ambivert (Seimbang)',
+        summary: 'Anda memiliki keluwesan sosial tinggi: menikmati percakapan hangat namun juga menghargai ketenangan waktu sendiri.',
+        daily: 'Mampu membaur dengan baik di kerumunan, namun juga bisa fokus bekerja sendirian tanpa merasa kesepian.',
+        superpower: 'Bunglon sosial yang hebat: bisa menjadi pendengar setia sekaligus pembicara yang menarik sesuai konteks.',
+        blindspot: 'Terkadang bingung membaca kebutuhan energi sendiri apakah sedang butuh teman bicara atau butuh isolasi.',
+        tip: 'Sadari batas energi Anda setiap hari agar tidak memaksakan diri bersosialisasi saat baterai sosial sudah menipis.'
+      },
+      high: {
+        label: 'Ekstrovert & Antusias',
+        summary: 'Anda dinamis, ekspresif, berenergi tinggi, dan terdorong oleh interaksi sosial serta peluang kepemimpinan.',
+        daily: 'Mudah menghidupkan suasana, suka bertukar pikiran secara langsung, dan berani mengambil inisiatif di tengah kelompok.',
+        superpower: 'Karisma alami, kemampuan networking luas, persuasif, dan membawa optimisme bagi lingkungan sekitar.',
+        blindspot: 'Bisa merasa gelisah saat harus sendirian terlalu lama atau mendominasi percakapan tanpa sengaja.',
+        tip: 'Latih kemampuan mendengar aktif (*active listening*) dan beri ruang bagi orang lain untuk mengutarakan pendapat mereka.'
+      }
+    }
+  },
+  A: {
+    code: 'A',
+    name: 'Agreeableness',
+    indonesian: 'Keramahan & Empati',
+    color: 'var(--color-a)',
+    icon: '🤝',
+    levels: {
+      low: {
+        label: 'Kritis & Kompetitif',
+        summary: 'Anda skeptis, lugas, analitis, dan lebih mengutamakan objektivitas data atau fakta dibanding menjaga perasaan sesaat.',
+        daily: 'Tidak ragu menantang konsensus, berani berkonflik demi prinsip, dan berorientasi pada hasil kompetitif.',
+        superpower: 'Negosiator tangguh, mampu mengambil keputusan sulit tanpa bias emosional, dan pemeriksa kualitas yang tajam.',
+        blindspot: 'Bisa dipersepsikan sebagai orang yang dingin, kurang berempati, atau terlalu keras dalam memberi kritik.',
+        tip: 'Gunakan metode "sandwich feedback" (apresiasi, saran perbaikan, dorongan positif) agar kritik Anda lebih mudah diterima.'
+      },
+      medium: {
+        label: 'Kooperatif & Realistis',
+        summary: 'Anda ramah dan kooperatif, namun tetap memiliki batasan yang tegas saat kepentingan prinsipil dipertaruhkan.',
+        daily: 'Bisa bekerja sama dengan rukun dalam tim, namun tidak segan membela diri jika merasa diperlakukan tidak adil.',
+        superpower: 'Hubungan kerja yang sehat dan kemampuan menyeimbangkan empati dengan ketegasan profesional.',
+        blindspot: 'Terkadang bimbang antara ingin menyenangkan orang lain atau mempertahankan pendirian pribadi.',
+        tip: 'Jaga kejelasan batasan (*boundaries*) sejak awal dalam setiap kolaborasi tim.'
+      },
+      high: {
+        label: 'Sangat Empatik & Altruis',
+        summary: 'Anda berhati hangat, penuh empati, memercayai orang lain, dan selalu mengutamakan kedamaian serta kesejahteraan bersama.',
+        daily: 'Suka membantu tanpa pamrih, menghindari pertengkaran, dan selalu berusaha memahami sudut pandang orang lain.',
+        superpower: 'Membangun kepercayaan psikologis tinggi di dalam tim, teman curhat yang menenangkan, dan perekat komunitas.',
+        blindspot: 'Sulit berkata "tidak" (*people-pleasing*), mudah dimanfaatkan orang lain, dan mengorbankan kebutuhan diri sendiri.',
+        tip: 'Ingat bahwa menolak permintaan yang merugikan Anda adalah bentuk menjaga integritas dan energi untuk hal yang benar-benar bermakna.'
+      }
+    }
+  },
+  N: {
+    code: 'N',
+    name: 'Neuroticism (Sensitivitas Emosi)',
+    indonesian: 'Stabilitas & Sensitivitas Emosi',
+    color: 'var(--color-n)',
+    icon: '🌊',
+    levels: {
+      low: {
+        label: 'Stabil & Tenang (*Resilient*)',
+        summary: 'Anda memiliki ketahanan emosional yang tinggi, tidak mudah cemas, stabil, dan berkepala dingin di situasi krisis.',
+        daily: 'Jarang overthinking, mampu tidur nyenyak meski ada tantangan esok hari, dan cepat bangkit dari kekecewaan.',
+        superpower: 'Batu karang yang kokoh di tengah badai krisis, penenang tim di situasi darurat, dan stabilitas suasana hati konsisten.',
+        blindspot: 'Terkadang meremehkan risiko bahaya nyata atau kurang peka terhadap kekhawatiran emosional orang lain yang lebih sensitif.',
+        tip: 'Tetap lakukan analisis risiko secara rasional dan tunjukkan empati saat orang di sekitar Anda sedang cemas.'
+      },
+      medium: {
+        label: 'Responsif & Terkendali',
+        summary: 'Anda merasakan kecemasan atau tekanan secara wajar, namun memiliki mekanisme koping untuk kembali tenang.',
+        daily: 'Dapat merasa tegang saat tenggat waktu mendekat, namun tidak sampai melumpuhkan kinerja sehari-hari.',
+        superpower: 'Kewaspadaan yang sehat terhadap risiko nyata tanpa kehilangan kemampuan berpikir rasional.',
+        blindspot: 'Stres bisa menumpuk jika beberapa masalah pribadi dan pekerjaan datang secara bersamaan.',
+        tip: 'Lakukan dekompresi rutin melalui olahraga, pernapasan dalam, atau meditasi saat ritme hidup sedang intens.'
+      },
+      high: {
+        label: 'Sensitif & Waspada (*Vigilant*)',
+        summary: 'Anda sangat sensitif terhadap perubahan emosional, mudah overthinking, dan responsif terhadap potensi ancaman atau stresor.',
+        daily: 'Sering memikirkan kemungkinan terburuk (*worst-case scenario*), suasana hati mudah berfluktuasi, namun sangat peka.',
+        superpower: 'Detektor risiko yang tajam: mampu mendeteksi potensi masalah atau celah bahaya sebelum orang lain menyadarinya.',
+        blindspot: 'Rentan terhadap kelelahan mental, kecemasan kronis, dan keraguan terhadap kemampuan diri sendiri (*impostor syndrome*).',
+        tip: 'Latih teknik "Grounding" 5-4-3-2-1 dan journaling untuk memisahkan antara fakta nyata vs asumsi kecemasan semata.'
+      }
+    }
+  }
+};
+
+// ─────────────────────────────────────────────
+// STATE MANAGEMENT
+// ─────────────────────────────────────────────
+let userAnswers = {};
+
+function calculateScores() {
+  const scores = { O: 0, C: 0, E: 0, A: 0, N: 0 };
+  const counts = { O: 0, C: 0, E: 0, A: 0, N: 0 };
+
+  questions.forEach(q => {
+    const ans = userAnswers[q.id];
+    if (ans) {
+      const val = q.isReverse ? (6 - ans) : ans;
+      scores[q.trait] += val;
+      counts[q.trait] += 1;
+    }
+  });
+
+  const finalScores = {};
+  ['O', 'C', 'E', 'A', 'N'].forEach(trait => {
+    finalScores[trait] = counts[trait] > 0 
+      ? Math.round((scores[trait] / counts[trait]) * 10) / 10 
+      : 3.0;
+  });
+
+  return finalScores;
+}
+
+function getLevel(score) {
+  if (score < 2.6) return 'low';
+  if (score <= 3.6) return 'medium';
+  return 'high';
+}
+
+function getLevelBadge(level) {
+  return {
+    low: '<span class="level-badge badge-low">Rendah</span>',
+    medium: '<span class="level-badge badge-medium">Sedang</span>',
+    high: '<span class="level-badge badge-high">Tinggi</span>'
+  }[level];
+}
+
+function pct(score) {
+  return Math.round(((score - 1) / 4) * 100);
+}
+
+// ─────────────────────────────────────────────
+// ARCHETYPE SYNTHESIS LOGIC
+// ─────────────────────────────────────────────
+function getArchetype(scores) {
+  // Sort traits by score descending
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const primary = sorted[0][0];
+  const secondary = sorted[1][0];
+
+  const archetypes = {
+    'OC': { title: 'The Visionary Architect', desc: 'Pemikir visioner dengan kemampuan eksekusi dan kedisiplinan yang tinggi. Anda merancang masa depan dengan rencana konkret.' },
+    'OE': { title: 'The Innovative Catalyst', desc: 'Penuh rasa ingin tahu, kreatif, dan pandai menginspirasi orang lain untuk mencoba ide-ide segar nan berani.' },
+    'OA': { title: 'The Empathetic Philosopher', desc: 'Memiliki wawasan humanis yang kaya, terbuka pada keberagaman, serta selalu berupaya memahami esensi manusia.' },
+    'ON': { title: 'The Sensitive Creative', desc: 'Memiliki kedalaman emosi dan imajinasi luar biasa. Sensitivitas Anda menjadi bahan bakar kreativitas yang autentik.' },
+    'CO': { title: 'The Strategic Builder', desc: 'Tertata, metodis, namun tetap terbuka terhadap inovasi cerdas demi efisiensi dan hasil terbaik.' },
+    'CE': { title: 'The Driven Commander', desc: 'Fokus, energetik, dan tegas. Anda memimpin dengan keteladanan kerja keras dan pencapaian target nyata.' },
+    'CA': { title: 'The Trusted Pillar', desc: 'Andal, setia, dan penuh integritas. Anda adalah sandaran tim yang selalu menjaga janji dan keharmonisan.' },
+    'CN': { title: 'The Vigilant Perfectionist', desc: 'Sangat teliti, berhati-hati, dan selalu bersiap menghadapi segala skenario agar tidak ada kesalahan fatal.' },
+    'EO': { title: 'The Charismatic Pioneer', desc: 'Menyenangkan, berani mengambil risiko, dan suka membagikan ide-ide terobosan kepada banyak orang.' },
+    'EC': { title: 'The Executive Leader', desc: 'Berdaya juang tinggi, vokal, dan terstruktur. Anda sangat efektif menggerakkan kelompok menuju target.' },
+    'EA': { title: 'The Warm Connector', desc: 'Ramah, populer, dan penuh kehangatan. Anda memiliki bakat alami menyatukan orang-orang dari berbagai latar belakang.' },
+    'EN': { title: 'The Passionate Expressive', desc: 'Ekspresif, energetik, dan dinamis. Emosi Anda hidup dan mendorong keterlibatan yang mendalam dalam setiap hal.' },
+    'AO': { title: 'The Compassionate Idealist', desc: 'Penuh empati, menghargai seni dan kemanusiaan, serta memiliki visi tentang dunia yang lebih harmonis.' },
+    'AC': { title: 'The Dedicated Protector', desc: 'Sabar, penuh kepedulian, dan konsisten dalam melayani serta mendukung kesuksesan orang lain.' },
+    'AE': { title: 'The Harmonious Collaborator', desc: 'Menyenangkan dalam tim, selalu mendengarkan, dan membawa suasana damai yang produktif.' },
+    'AN': { title: 'The Empathetic Guardian', desc: 'Sangat peka terhadap penderitaan sesama, penuh kepedulian tulus, meski terkadang memikul beban emosional berlebih.' },
+    'NO': { title: 'The Deep Introspective', desc: 'Melihat lapisan-lapisan emosi yang sering terlewatkan orang lain. Penuh refleksi dan kepekaan intuisi.' },
+    'NC': { title: 'The Conscientious Analyst', desc: 'Menganalisis setiap risiko dengan detail ekstrem demi memastikan stabilitas dan keamanan jangka panjang.' },
+    'NE': { title: 'The Dynamic Reactor', desc: 'Reaktif dan antusias, penuh energi spontan yang membutuhkan ruang penyaluran positif.' },
+    'NA': { title: 'The Sensitive Peacemaker', desc: 'Sangat peka pada ketegangan emosi dan berupaya sekuat tenaga menjaga perdamaian di sekelilingnya.' }
+  };
+
+  const key = primary + secondary;
+  return archetypes[key] || {
+    title: 'The Balanced Navigator',
+    desc: 'Memiliki perpaduan profil yang seimbang dan adaptif dalam menghadapi berbagai spektrum kehidupan.'
+  };
+}
+
+// ─────────────────────────────────────────────
+// RADAR CHART GENERATOR (SVG)
+// ─────────────────────────────────────────────
+function renderRadarChartSvg(scores) {
+  const size = 380;
+  const center = size / 2;
+  const radius = 130;
+  const traits = ['O', 'C', 'E', 'A', 'N'];
+  const labels = ['Openness', 'Conscientious', 'Extraversion', 'Agreeable', 'Neuroticism'];
+  const totalAxes = traits.length;
+  const angleSlice = (Math.PI * 2) / totalAxes;
+
+  // Concentric polygon grids (20%, 40%, 60%, 80%, 100%)
+  const levels = [0.2, 0.4, 0.6, 0.8, 1.0];
+  let gridPolygons = '';
+  levels.forEach(lvl => {
+    const points = traits.map((_, i) => {
+      const angle = i * angleSlice - Math.PI / 2;
+      const x = center + radius * lvl * Math.cos(angle);
+      const y = center + radius * lvl * Math.sin(angle);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    gridPolygons += `<polygon points="${points}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" />`;
+  });
+
+  // Axis lines & labels
+  let axisLines = '';
+  let axisLabels = '';
+  traits.forEach((t, i) => {
+    const angle = i * angleSlice - Math.PI / 2;
+    const x = center + radius * Math.cos(angle);
+    const y = center + radius * Math.sin(angle);
+    axisLines += `<line x1="${center}" y1="${center}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,0.12)" stroke-dasharray="3 3" />`;
+
+    // Label positioning
+    const labelRadius = radius + 28;
+    const lx = center + labelRadius * Math.cos(angle);
+    const ly = center + labelRadius * Math.sin(angle) + 4;
+    const anchor = Math.abs(Math.cos(angle)) < 0.2 ? 'middle' : (Math.cos(angle) > 0 ? 'start' : 'end');
+    const color = traitMeta[t].color;
+
+    axisLabels += `
+      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${color}" font-family="'DM Sans', sans-serif" font-size="12" font-weight="700" text-anchor="${anchor}">
+        ${t}: ${scores[t].toFixed(1)}
+      </text>
+      <text x="${lx.toFixed(1)}" y="${(ly + 13).toFixed(1)}" fill="#8e8ea0" font-family="'DM Sans', sans-serif" font-size="9" text-anchor="${anchor}">
+        ${labels[i]}
+      </text>
+    `;
+  });
+
+  // Data polygon points
+  const dataPoints = traits.map((t, i) => {
+    const scorePct = (scores[t] - 1) / 4; // 0 to 1
+    // Keep min radius at 0.08 for visibility
+    const effectivePct = Math.max(0.08, Math.min(1.0, scorePct));
+    const angle = i * angleSlice - Math.PI / 2;
+    const x = center + radius * effectivePct * Math.cos(angle);
+    const y = center + radius * effectivePct * Math.sin(angle);
+    return { x, y, t, score: scores[t] };
+  });
+
+  const pointsStr = dataPoints.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+
+  let circles = '';
+  dataPoints.forEach(p => {
+    circles += `
+      <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5" fill="${traitMeta[p.t].color}" stroke="#141417" stroke-width="2">
+        <title>${traitMeta[p.t].name}: ${p.score.toFixed(1)}</title>
+      </circle>
+    `;
+  });
+
+  return `
+    <svg class="radar-svg" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(139, 92, 246, 0.45)" />
+          <stop offset="60%" stop-color="rgba(6, 182, 212, 0.3)" />
+          <stop offset="100%" stop-color="rgba(244, 63, 94, 0.15)" />
+        </radialGradient>
+      </defs>
+      ${gridPolygons}
+      ${axisLines}
+      <polygon points="${pointsStr}" fill="url(#radarGrad)" stroke="#ffd166" stroke-width="2.5" />
+      ${circles}
+      ${axisLabels}
+    </svg>
+  `;
+}
+
+// ─────────────────────────────────────────────
+// VIEW: RENDER QUIZ
+// ─────────────────────────────────────────────
+function renderQuiz() {
+  const answeredCount = Object.keys(userAnswers).length;
+  const progressPct = Math.round((answeredCount / questions.length) * 100);
+
+  const questionsHtml = questions.map((q, idx) => {
+    const isAnswered = userAnswers[q.id] !== undefined;
+    const optionsHtml = likertOptions.map(opt => `
+      <div>
+        <input 
+          type="radio" 
+          name="q_${q.id}" 
+          id="q_${q.id}_${opt.val}" 
+          value="${opt.val}" 
+          class="option-input" 
+          ${userAnswers[q.id] === opt.val ? 'checked' : ''}
+          onchange="handleSelect(${q.id}, ${opt.val})"
+        >
+        <label for="q_${q.id}_${opt.val}" class="option-label">
+          <span class="option-val">${opt.val}</span>
+          <span class="option-text">${opt.label}</span>
+        </label>
+      </div>
+    `).join('');
+
+    return `
+      <div class="question-card ${isAnswered ? 'answered' : ''}" id="card_${q.id}">
+        <div class="question-header">
+          <div class="q-num">${idx + 1}</div>
+          <div class="q-text">${q.text}</div>
+        </div>
+        <div class="options-grid">
+          ${optionsHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="header">
+      <div class="eyebrow"><span></span> Inventori Psikologi Ilmiah</div>
+      <h1>Tes Kepribadian OCEAN</h1>
+      <p>Model Big Five (OCEAN) adalah standar emas psikologi kepribadian modern untuk memetakan karakter, gaya kerja, dan cara Anda berinteraksi dengan dunia.</p>
+      <div class="meta-pills">
+        <span class="meta-pill">⏱ ~3-5 Menit</span>
+        <span class="meta-pill">📋 20 Pertanyaan</span>
+        <span class="meta-pill">🔒 100% Privat & Tanpa Registrasi</span>
+      </div>
+    </div>
+
+    <div class="sticky-progress">
+      <div class="progress-info">
+        <span>Kemajuan Pengisian</span>
+        <span id="progress-text">${answeredCount} dari ${questions.length} terjawab (${progressPct}%)</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill" style="width: ${progressPct}%"></div>
+      </div>
+    </div>
+
+    <div class="questions-group">
+      ${questionsHtml}
+    </div>
+
+    <div class="actions-row">
+      <button class="btn-submit" id="btn-submit" onclick="submitQuiz()" ${answeredCount < questions.length ? 'disabled' : ''}>
+        Lihat Hasil Analisis Profil ➔
+      </button>
+      <button class="btn-demo" onclick="loadDemoResults()">
+        Lihat Contoh Hasil (Mode Demo)
+      </button>
+    </div>
+
+    <div class="footer">
+      <p>Berdasarkan model <strong>Big Five Personality (Goldberg & Costa/McCrae)</strong></p>
+      <p style="margin-top: 6px;"><a href="index.html">Buka Tes Grit (Angela Duckworth) ➔</a></p>
+    </div>
+  `;
+}
+
+function handleSelect(qId, value) {
+  userAnswers[qId] = value;
+  const card = document.getElementById(`card_${qId}`);
+  if (card) card.classList.add('answered');
+
+  const count = Object.keys(userAnswers).length;
+  const pctVal = Math.round((count / questions.length) * 100);
+
+  const fill = document.getElementById('progress-fill');
+  const text = document.getElementById('progress-text');
+  const btn = document.getElementById('btn-submit');
+
+  if (fill) fill.style.width = pctVal + '%';
+  if (text) text.innerText = `${count} dari ${questions.length} terjawab (${pctVal}%)`;
+  if (btn) btn.disabled = (count < questions.length);
+}
+
+function submitQuiz() {
+  const answeredCount = Object.keys(userAnswers).length;
+  if (answeredCount < questions.length) {
+    // Find first unanswered
+    const firstUnanswered = questions.find(q => userAnswers[q.id] === undefined);
+    if (firstUnanswered) {
+      const el = document.getElementById(`card_${firstUnanswered.id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.style.borderColor = 'var(--color-n)';
+        setTimeout(() => el.style.borderColor = '', 1500);
+      }
+    }
+    return;
+  }
+
+  const scores = calculateScores();
+  
+  // Update URL params without reloading
+  const params = new URLSearchParams();
+  params.set('o', scores.O);
+  params.set('c', scores.C);
+  params.set('e', scores.E);
+  params.set('a', scores.A);
+  params.set('n', scores.N);
+  window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+
+  renderResults(scores);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function loadDemoResults() {
+  const demoScores = { O: 4.3, C: 3.8, E: 2.7, A: 4.5, N: 2.2 };
+  const params = new URLSearchParams();
+  params.set('o', demoScores.O);
+  params.set('c', demoScores.C);
+  params.set('e', demoScores.E);
+  params.set('a', demoScores.A);
+  params.set('n', demoScores.N);
+  window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+
+  renderResults(demoScores);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─────────────────────────────────────────────
+// VIEW: RENDER RESULTS
+// ─────────────────────────────────────────────
+function renderResults(scores) {
+  const archetype = getArchetype(scores);
+  const traits = ['O', 'C', 'E', 'A', 'N'];
+
+  // Score cards HTML
+  const scoreCardsHtml = traits.map(t => {
+    const s = scores[t];
+    const lvl = getLevel(s);
+    const meta = traitMeta[t];
+    return `
+      <div class="trait-card trait-${t.toLowerCase()}">
+        <div class="trait-letter">${t}</div>
+        <div class="trait-name">${meta.name}</div>
+        <div class="trait-indonesian">${meta.indonesian}</div>
+        <div class="trait-score">${s.toFixed(1)}</div>
+        <div>${getLevelBadge(lvl)}</div>
+        <div class="mini-progress">
+          <div class="mini-progress-bar" id="prog_${t}" style="width: 0%"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Detailed section HTML
+  const detailsHtml = traits.map(t => {
+    const s = scores[t];
+    const lvl = getLevel(s);
+    const meta = traitMeta[t];
+    const info = meta.levels[lvl];
+    return `
+      <div class="section-detail">
+        <div class="section-header">
+          <div class="section-icon" style="background: rgba(255,255,255,0.06); color: ${meta.color};">
+            ${meta.icon}
+          </div>
+          <div>
+            <div class="section-title">${meta.name} (${t}) — ${info.label}</div>
+            <div class="section-subtitle">${meta.indonesian} · Skor: ${s.toFixed(1)} / 5.0 (${getLevelBadge(lvl)})</div>
+          </div>
+        </div>
+
+        <div class="info-box highlight" style="margin-bottom: 14px;">
+          <h4>📋 Ringkasan Profil</h4>
+          <p>${info.summary}</p>
+        </div>
+
+        <div class="blocks-grid">
+          <div class="info-box">
+            <h4>🌱 Manifestasi Keseharian & Kerja</h4>
+            <p>${info.daily}</p>
+          </div>
+          <div class="info-box">
+            <h4>⚡ Kekuatan Utama (Superpower)</h4>
+            <p>${info.superpower}</p>
+          </div>
+          <div class="info-box">
+            <h4>⚠️ Titik Rawan (Blindspot)</h4>
+            <p>${info.blindspot}</p>
+          </div>
+          <div class="info-box">
+            <h4>💡 Saran Aksi Nyata</h4>
+            <p>${info.tip}</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="header" style="margin-bottom: 32px;">
+      <div class="eyebrow"><span></span> Hasil Tes Kepribadian OCEAN</div>
+      <h1>Profil Big Five Anda</h1>
+      <p>Berikut adalah visualisasi menyeluruh serta interpretasi psikologis dari kelima pilar kepribadian Anda.</p>
+    </div>
+
+    <!-- ARCHETYPE BANNER -->
+    <div class="archetype-banner">
+      <div class="archetype-tag">Arketipe Kepribadian Utama</div>
+      <div class="archetype-title">${archetype.title}</div>
+      <div class="archetype-desc">${archetype.desc}</div>
+      <div class="dominant-pills">
+        <span class="dominant-pill" style="color: ${traitMeta['O'].color}">Openness: ${scores.O.toFixed(1)}</span>
+        <span class="dominant-pill" style="color: ${traitMeta['C'].color}">Conscientiousness: ${scores.C.toFixed(1)}</span>
+        <span class="dominant-pill" style="color: ${traitMeta['E'].color}">Extraversion: ${scores.E.toFixed(1)}</span>
+        <span class="dominant-pill" style="color: ${traitMeta['A'].color}">Agreeableness: ${scores.A.toFixed(1)}</span>
+        <span class="dominant-pill" style="color: ${traitMeta['N'].color}">Neuroticism: ${scores.N.toFixed(1)}</span>
+      </div>
+    </div>
+
+    <!-- RADAR CHART -->
+    <div class="radar-container">
+      <div class="radar-title">Peta Spektrum 5 Dimensi</div>
+      <div class="radar-subtitle">Visualisasi jaring laba-laba memperlihatkan keseimbangan relatif kepribadian Anda</div>
+      <div class="radar-svg-wrap">
+        ${renderRadarChartSvg(scores)}
+      </div>
+    </div>
+
+    <!-- TRAIT SCORE CARDS -->
+    <div class="traits-grid">
+      ${scoreCardsHtml}
+    </div>
+
+    <!-- IN-DEPTH DETAILS -->
+    <div>
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 20px; text-align: center;">
+        Analisis Mendalam Tiap Dimensi
+      </h2>
+      ${detailsHtml}
+    </div>
+
+    <!-- SHARE & ACTION TOOLBAR -->
+    <div class="share-toolbar">
+      <div>
+        <button class="btn-share" onclick="copyResultLink()">
+          🔗 Salin Link Hasil Tes
+        </button>
+      </div>
+      <div>
+        <button class="btn-retake" onclick="resetToQuiz()">
+          ↺ Ulangi Pengisian Kuesioner
+        </button>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Berdasarkan teori kepribadian ilmiah <strong>Big Five (OCEAN)</strong></p>
+      <p style="margin-top: 6px;"><a href="index.html">Lihat juga: Tes Grit (Angela Duckworth) ➔</a></p>
+    </div>
+  `;
+
+  // Animate mini progress bars
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      traits.forEach(t => {
+        const el = document.getElementById(`prog_${t}`);
+        if (el) el.style.width = pct(scores[t]) + '%';
+      });
+    }, 200);
+  });
+}
+
+function copyResultLink() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('Tautan hasil tes berhasil disalin ke clipboard!');
+  }).catch(() => {
+    // Fallback
+    const input = document.createElement('input');
+    input.value = url;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
+    showToast('Tautan hasil tes berhasil disalin ke clipboard!');
+  });
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.innerText = msg;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
+}
+
+function resetToQuiz() {
+  userAnswers = {};
+  window.history.pushState({}, '', window.location.pathname);
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─────────────────────────────────────────────
+// INITIALIZATION & URL PARAMETER PARSING
+// ─────────────────────────────────────────────
+(function init() {
+  const params = new URLSearchParams(window.location.search);
+
+  // Parse scores from either single-letter shorthand or full names
+  function parseVal(val) {
+    if (!val) return null;
+    const num = parseFloat(val);
+    return (!isNaN(num) && num >= 1.0 && num <= 5.0) ? num : null;
+  }
+
+  const o = parseVal(params.get('o') ?? params.get('openness'));
+  const c = parseVal(params.get('c') ?? params.get('conscientiousness'));
+  const e = parseVal(params.get('e') ?? params.get('extraversion'));
+  const a = parseVal(params.get('a') ?? params.get('agreeableness'));
+  const n = parseVal(params.get('n') ?? params.get('neuroticism'));
+
+  if (o !== null && c !== null && e !== null && a !== null && n !== null) {
+    // Valid scores in query params -> show results directly
+    renderResults({ O: o, C: c, E: e, A: a, N: n });
+  } else if (params.get('demo') === 'true') {
+    loadDemoResults();
+  } else {
+    // Default -> show interactive test form
+    renderQuiz();
+  }
+})();
+</script>
+</body>
+</html>
