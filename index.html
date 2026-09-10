@@ -379,9 +379,94 @@
     color: var(--muted);
     font-size: 15px;
   }
+
+  /* Top Navigation Bar */
+  .nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(13, 13, 15, 0.85);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-brand-badge {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(255, 209, 102, 0.15);
+    color: var(--highlight);
+    border: 1px solid rgba(255, 209, 102, 0.25);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-link.active {
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
 </style>
 </head>
 <body>
+<!-- TOP NAVIGATION BAR -->
+<nav class="nav-bar" aria-label="Navigasi Utama">
+  <div class="nav-container">
+    <a href="index.html" class="nav-brand">
+      Satu Persen Tests
+      <span class="nav-brand-badge">Psikometri</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Tes Grit</a>
+      <a href="ocean.html" class="nav-link">Tes OCEAN (Big Five)</a>
+    </div>
+  </div>
+</nav>
+
 <div class="container" id="app">
   <div class="loading">
     <span class="loading-dot"></span>
@@ -623,6 +708,7 @@ function render(passion, perseverance, total) {
 
     <div class="footer">
       <p>Berdasarkan teori Grit oleh <strong>Angela Duckworth</strong></p>
+      <p style="margin-top: 6px;"><a href="ocean.html">Lihat juga: Tes Kepribadian OCEAN (Big Five) ➔</a></p>
     </div>
   `;
 
