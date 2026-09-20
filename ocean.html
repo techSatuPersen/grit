@@ -3,35 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- grit:theme:fouc:start · ADR-005: must run before first paint, before any bundle -->
+<script>
+  (function () {
+    var KEY = 'grit-theme';
+    var theme;
+    try {
+      theme = window.localStorage.getItem(KEY);
+    } catch (error) {
+      theme = null; /* storage blocked (private mode / CSP): fall through */
+    }
+    if (theme !== 'light' && theme !== 'dark') {
+      var query = typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-color-scheme: dark)')
+        : null;
+      theme = query && query.matches ? 'dark' : 'light';
+    }
+    var root = document.documentElement;
+    root.setAttribute('data-theme', theme);
+    root.style.colorScheme = theme;
+  })();
+</script>
+<!-- grit:theme:fouc:end -->
+<link rel="stylesheet" href="src/assets/styles/tokens/semantic.css">
+<link rel="stylesheet" href="src/assets/styles/theme.css">
 <title>Tes Kepribadian OCEAN (Big Five) · Satu Persen</title>
 <meta name="description" content="Ketahui profil kepribadian Big Five (OCEAN) Anda: Openness, Conscientiousness, Extraversion, Agreeableness, dan Neuroticism dengan analisis psikometri mendalam.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d0d0f;
-    --surface: #141417;
-    --card: #1a1a1f;
-    --card-hover: #22222a;
-    --border: #2a2a32;
-    --border-light: rgba(255, 255, 255, 0.08);
-    --text: #f0eff4;
-    --text-muted: #8e8ea0;
-    --muted: #6b6b80;
-    --highlight: #ffd166;
-    
-    /* Trait Colors */
-    --color-o: #8b5cf6; /* Openness - Violet */
-    --color-c: #10b981; /* Conscientiousness - Emerald */
-    --color-e: #f59e0b; /* Extraversion - Amber */
-    --color-a: #06b6d4; /* Agreeableness - Cyan */
-    --color-n: #f43f5e; /* Neuroticism - Rose */
-  }
+  /* Colour + theme tokens (Layer 1) live in src/assets/styles/tokens/.
+     This page consumes semantic tokens only: var(--color-*). */
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--bg);
-    color: var(--text);
+    background: var(--color-bg);
+    color: var(--color-fg);
     font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
@@ -44,10 +51,10 @@
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(ellipse 65% 45% at 15% 10%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
-      radial-gradient(ellipse 55% 55% at 85% 20%, rgba(6, 182, 212, 0.07) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 75% 85%, rgba(244, 63, 94, 0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 60% at 20% 90%, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
+      radial-gradient(ellipse 65% 45% at 15% 10%, color-mix(in srgb, var(--color-o) 8%, transparent) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 55% at 85% 20%, color-mix(in srgb, var(--color-a) 7%, transparent) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 75% 85%, color-mix(in srgb, var(--color-n) 6%, transparent) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 20% 90%, color-mix(in srgb, var(--color-c) 6%, transparent) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
   }
@@ -59,8 +66,8 @@
     z-index: 100;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    background: rgba(13, 13, 15, 0.85);
-    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+    border-bottom: 1px solid var(--color-border-subtle);
   }
 
   .nav-container {
@@ -80,7 +87,7 @@
     font-family: 'Playfair Display', serif;
     font-size: 18px;
     font-weight: 700;
-    color: var(--text);
+    color: var(--color-fg);
     text-decoration: none;
   }
 
@@ -91,9 +98,9 @@
     text-transform: uppercase;
     padding: 3px 8px;
     border-radius: 20px;
-    background: rgba(255, 209, 102, 0.15);
-    color: var(--highlight);
-    border: 1px solid rgba(255, 209, 102, 0.25);
+    background: var(--color-highlight-soft);
+    color: var(--color-highlight);
+    border: 1px solid color-mix(in srgb, var(--color-highlight) 25%, transparent);
   }
 
   .nav-links {
@@ -105,7 +112,7 @@
   .nav-link {
     font-size: 13px;
     font-weight: 500;
-    color: var(--muted);
+    color: var(--color-muted);
     text-decoration: none;
     padding: 6px 14px;
     border-radius: 8px;
@@ -113,14 +120,14 @@
   }
 
   .nav-link:hover {
-    color: var(--text);
-    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-fg);
+    background: var(--color-overlay-weak);
   }
 
   .nav-link.active {
-    color: var(--text);
-    background: var(--card);
-    border: 1px solid var(--border);
+    color: var(--color-fg);
+    background: var(--color-card);
+    border: 1px solid var(--color-border-subtle);
   }
 
   /* Main Container */
@@ -144,7 +151,7 @@
     font-weight: 600;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--color-muted);
     margin-bottom: 14px;
     display: inline-flex;
     align-items: center;
@@ -165,14 +172,14 @@
     font-weight: 900;
     line-height: 1.15;
     margin-bottom: 18px;
-    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 40%, var(--highlight) 100%);
+    background: linear-gradient(135deg, var(--color-fg) 0%, var(--color-fg-soft) 40%, var(--color-highlight) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .header p {
-    color: var(--text-muted);
+    color: var(--color-muted);
     font-size: 15px;
     max-width: 580px;
     margin: 0 auto 20px;
@@ -189,9 +196,9 @@
 
   .meta-pill {
     font-size: 12px;
-    color: var(--muted);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
+    color: var(--color-muted);
+    background: var(--color-overlay-faint);
+    border: 1px solid var(--color-border-subtle);
     padding: 4px 12px;
     border-radius: 100px;
     display: inline-flex;
@@ -204,14 +211,14 @@
     position: sticky;
     top: 61px;
     z-index: 90;
-    background: rgba(20, 20, 23, 0.92);
+    background: color-mix(in srgb, var(--color-surface) 92%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 16px;
     padding: 14px 20px;
     margin-bottom: 32px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px var(--color-shadow-soft);
   }
 
   .progress-info {
@@ -226,7 +233,7 @@
   .progress-bar-bg {
     width: 100%;
     height: 6px;
-    background: rgba(255, 255, 255, 0.07);
+    background: var(--color-overlay-weak);
     border-radius: 10px;
     overflow: hidden;
   }
@@ -248,8 +255,8 @@
   }
 
   .question-card {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: var(--color-card);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 18px;
     padding: 24px 26px;
     transition: all 0.25s ease;
@@ -257,12 +264,12 @@
   }
 
   .question-card:hover {
-    border-color: rgba(255, 255, 255, 0.16);
-    background: var(--card-hover);
+    border-color: var(--color-overlay);
+    background: var(--color-card-hover);
   }
 
   .question-card.answered {
-    border-color: rgba(16, 185, 129, 0.25);
+    border-color: color-mix(in srgb, var(--color-success) 25%, transparent);
   }
 
   .question-header {
@@ -279,23 +286,23 @@
     width: 32px;
     height: 32px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-overlay-weak);
     font-size: 13px;
     font-weight: 700;
-    color: var(--muted);
+    color: var(--color-muted);
     flex-shrink: 0;
     transition: all 0.2s ease;
   }
 
   .question-card.answered .q-num {
-    background: rgba(16, 185, 129, 0.15);
-    color: var(--color-c);
+    background: var(--color-success-soft);
+    color: var(--color-success);
   }
 
   .q-text {
     font-size: 16px;
     font-weight: 500;
-    color: var(--text);
+    color: var(--color-fg);
     line-height: 1.5;
     padding-top: 3px;
   }
@@ -319,8 +326,8 @@
     justify-content: center;
     padding: 12px 8px;
     min-height: 52px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
+    background: var(--color-overlay-faint);
+    border: 1px solid var(--color-border);
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -337,8 +344,8 @@
   }
 
   .option-label:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--color-overlay-weak);
+    border-color: var(--color-overlay-strong);
     transform: translateY(-1px);
   }
 
@@ -349,25 +356,25 @@
   }
 
   .option-input:focus-visible + .option-label {
-    outline: 2px solid var(--highlight);
+    outline: 2px solid var(--color-highlight);
     outline-offset: 2px;
   }
 
   .option-input:checked + .option-label {
-    background: rgba(255, 209, 102, 0.12);
-    border-color: var(--highlight);
-    color: #ffffff;
-    box-shadow: 0 0 16px rgba(255, 209, 102, 0.15);
+    background: color-mix(in srgb, var(--color-highlight) 12%, transparent);
+    border-color: var(--color-highlight);
+    color: var(--color-fg);
+    box-shadow: 0 0 16px var(--color-highlight-soft);
   }
 
   .option-text {
     font-size: 11px;
     font-weight: 500;
-    color: var(--text-muted);
+    color: var(--color-muted);
   }
 
   .option-input:checked + .option-label .option-text {
-    color: var(--highlight);
+    color: var(--color-highlight);
     font-weight: 700;
   }
 
@@ -387,8 +394,8 @@
   }
 
   .btn-submit {
-    background: linear-gradient(135deg, #ffd166 0%, #f59e0b 100%);
-    color: #111114;
+    background: linear-gradient(135deg, var(--color-cta-from) 0%, var(--color-cta-to) 100%);
+    color: var(--color-cta-fg);
     font-family: 'DM Sans', sans-serif;
     font-size: 16px;
     font-weight: 700;
@@ -396,7 +403,7 @@
     border-radius: 100px;
     border: none;
     cursor: pointer;
-    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-cta-to) 25%, transparent);
     transition: all 0.25s ease;
     display: inline-flex;
     align-items: center;
@@ -405,7 +412,7 @@
 
   .btn-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(245, 158, 11, 0.35);
+    box-shadow: 0 12px 30px color-mix(in srgb, var(--color-cta-to) 35%, transparent);
   }
 
   .btn-submit:disabled {
@@ -417,27 +424,27 @@
 
   .btn-demo {
     background: transparent;
-    color: var(--muted);
+    color: var(--color-muted);
     font-size: 13px;
     padding: 8px 16px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 100px;
     cursor: pointer;
     transition: all 0.2s ease;
   }
 
   .btn-demo:hover {
-    color: var(--text);
-    border-color: rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.04);
+    color: var(--color-fg);
+    border-color: var(--color-overlay-strong);
+    background: var(--color-overlay-faint);
   }
 
   /* ─────────────────────────────────────────────
      RESULTS VIEW STYLING
      ───────────────────────────────────────────── */
   .archetype-banner {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%);
-    border: 1px solid rgba(139, 92, 246, 0.25);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-o) 12%, transparent) 0%, color-mix(in srgb, var(--color-a) 8%, transparent) 100%);
+    border: 1px solid color-mix(in srgb, var(--color-o) 25%, transparent);
     border-radius: 24px;
     padding: 36px 32px;
     text-align: center;
@@ -454,7 +461,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 209, 102, 0.05) 0%, transparent 70%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--color-highlight) 5%, transparent) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -463,7 +470,7 @@
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--highlight);
+    color: var(--color-highlight);
     margin-bottom: 12px;
   }
 
@@ -471,13 +478,13 @@
     font-family: 'Playfair Display', serif;
     font-size: clamp(26px, 4.5vw, 40px);
     font-weight: 900;
-    color: #ffffff;
+    color: var(--color-fg);
     margin-bottom: 12px;
     line-height: 1.2;
   }
 
   .archetype-desc {
-    color: #d1d5db;
+    color: var(--color-fg-soft);
     font-size: 15px;
     max-width: 640px;
     margin: 0 auto 20px;
@@ -496,13 +503,13 @@
     font-weight: 600;
     padding: 4px 12px;
     border-radius: 100px;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--color-overlay-weak);
   }
 
   /* Radar Chart Section */
   .radar-container {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: var(--color-card);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 24px;
     padding: 32px;
     margin-bottom: 40px;
@@ -520,7 +527,7 @@
 
   .radar-subtitle {
     font-size: 13px;
-    color: var(--muted);
+    color: var(--color-muted);
     margin-bottom: 24px;
   }
 
@@ -561,8 +568,8 @@
   }
 
   .trait-card {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: var(--color-card);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 18px;
     padding: 20px 16px;
     text-align: center;
@@ -589,11 +596,11 @@
   .trait-card.trait-a::before { background: var(--color-a); }
   .trait-card.trait-n::before { background: var(--color-n); }
 
-  .trait-card.trait-o { border-color: rgba(139, 92, 246, 0.2); }
-  .trait-card.trait-c { border-color: rgba(16, 185, 129, 0.2); }
-  .trait-card.trait-e { border-color: rgba(245, 158, 11, 0.2); }
-  .trait-card.trait-a { border-color: rgba(6, 182, 212, 0.2); }
-  .trait-card.trait-n { border-color: rgba(244, 63, 94, 0.2); }
+  .trait-card.trait-o { border-color: color-mix(in srgb, var(--color-o) 20%, transparent); }
+  .trait-card.trait-c { border-color: color-mix(in srgb, var(--color-c) 20%, transparent); }
+  .trait-card.trait-e { border-color: color-mix(in srgb, var(--color-e) 20%, transparent); }
+  .trait-card.trait-a { border-color: color-mix(in srgb, var(--color-a) 20%, transparent); }
+  .trait-card.trait-n { border-color: color-mix(in srgb, var(--color-n) 20%, transparent); }
 
   .trait-letter {
     display: inline-flex;
@@ -607,22 +614,22 @@
     margin-bottom: 8px;
   }
 
-  .trait-card.trait-o .trait-letter { background: rgba(139, 92, 246, 0.15); color: var(--color-o); }
-  .trait-card.trait-c .trait-letter { background: rgba(16, 185, 129, 0.15); color: var(--color-c); }
-  .trait-card.trait-e .trait-letter { background: rgba(245, 158, 11, 0.15); color: var(--color-e); }
-  .trait-card.trait-a .trait-letter { background: rgba(6, 182, 212, 0.15); color: var(--color-a); }
-  .trait-card.trait-n .trait-letter { background: rgba(244, 63, 94, 0.15); color: var(--color-n); }
+  .trait-card.trait-o .trait-letter { background: color-mix(in srgb, var(--color-o) 15%, transparent); color: var(--color-o); }
+  .trait-card.trait-c .trait-letter { background: color-mix(in srgb, var(--color-c) 15%, transparent); color: var(--color-c); }
+  .trait-card.trait-e .trait-letter { background: color-mix(in srgb, var(--color-e) 15%, transparent); color: var(--color-e); }
+  .trait-card.trait-a .trait-letter { background: color-mix(in srgb, var(--color-a) 15%, transparent); color: var(--color-a); }
+  .trait-card.trait-n .trait-letter { background: color-mix(in srgb, var(--color-n) 15%, transparent); color: var(--color-n); }
 
   .trait-name {
     font-size: 12px;
     font-weight: 600;
-    color: var(--text);
+    color: var(--color-fg);
     margin-bottom: 2px;
   }
 
   .trait-indonesian {
     font-size: 10px;
-    color: var(--muted);
+    color: var(--color-muted);
     margin-bottom: 12px;
     white-space: nowrap;
     overflow: hidden;
@@ -651,13 +658,13 @@
     display: inline-block;
   }
 
-  .badge-low { background: rgba(239, 68, 68, 0.15); color: #f87171; }
-  .badge-medium { background: rgba(234, 179, 8, 0.15); color: #facc15; }
-  .badge-high { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+  .badge-low { background: var(--color-danger-soft); color: var(--color-danger); }
+  .badge-medium { background: var(--color-warning-soft); color: var(--color-warning); }
+  .badge-high { background: var(--color-success-soft); color: var(--color-success); }
 
   .mini-progress {
     margin-top: 10px;
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--color-overlay-weak);
     border-radius: 10px;
     height: 4px;
     overflow: hidden;
@@ -678,8 +685,8 @@
 
   /* In-depth Interpretation Sections */
   .section-detail {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: var(--color-card);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 20px;
     padding: 32px;
     margin-bottom: 24px;
@@ -709,12 +716,12 @@
     font-family: 'Playfair Display', serif;
     font-size: 20px;
     font-weight: 700;
-    color: var(--text);
+    color: var(--color-fg);
   }
 
   .section-subtitle {
     font-size: 13px;
-    color: var(--muted);
+    color: var(--color-muted);
     margin-top: 2px;
   }
 
@@ -732,15 +739,15 @@
   }
 
   .info-box {
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 3px solid var(--border);
+    background: var(--color-overlay-faint);
+    border-left: 3px solid var(--color-border-subtle);
     border-radius: 0 10px 10px 0;
     padding: 18px 20px;
   }
 
   .info-box.highlight {
-    background: rgba(255, 209, 102, 0.05);
-    border-left-color: var(--highlight);
+    background: color-mix(in srgb, var(--color-highlight) 5%, transparent);
+    border-left-color: var(--color-highlight);
   }
 
   .info-box h4 {
@@ -748,7 +755,7 @@
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--color-muted);
     margin-bottom: 8px;
     display: flex;
     align-items: center;
@@ -756,19 +763,19 @@
   }
 
   .info-box.highlight h4 {
-    color: var(--highlight);
+    color: var(--color-highlight);
   }
 
   .info-box p {
     font-size: 14px;
     line-height: 1.7;
-    color: #c8c8d8;
+    color: var(--color-fg-soft);
   }
 
   /* Share & Action Toolbar */
   .share-toolbar {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 20px;
     padding: 24px;
     display: flex;
@@ -780,9 +787,9 @@
   }
 
   .btn-share {
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--text);
+    background: var(--color-card);
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-fg);
     font-size: 14px;
     font-weight: 600;
     padding: 12px 22px;
@@ -795,14 +802,14 @@
   }
 
   .btn-share:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--color-overlay-weak);
+    border-color: var(--color-overlay-strong);
   }
 
   .btn-retake {
     background: transparent;
     border: none;
-    color: var(--muted);
+    color: var(--color-muted);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -811,7 +818,7 @@
   }
 
   .btn-retake:hover {
-    color: var(--text);
+    color: var(--color-fg);
   }
 
   /* Toast notification */
@@ -820,14 +827,14 @@
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
-    background: #1e1e24;
-    color: #ffffff;
-    border: 1px solid var(--border);
+    background: var(--color-card-hover);
+    color: var(--color-fg);
+    border: 1px solid var(--color-border-subtle);
     padding: 12px 24px;
     border-radius: 100px;
     font-size: 13px;
     font-weight: 500;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px var(--color-shadow);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -845,12 +852,12 @@
   .footer {
     text-align: center;
     margin-top: 60px;
-    color: var(--muted);
+    color: var(--color-muted);
     font-size: 13px;
   }
 
   .footer a {
-    color: var(--highlight);
+    color: var(--color-highlight);
     text-decoration: none;
   }
 
@@ -1209,7 +1216,7 @@ function renderRadarChartSvg(scores) {
       const y = center + radius * lvl * Math.sin(angle);
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     }).join(' ');
-    gridPolygons += `<polygon points="${points}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1" />`;
+    gridPolygons += `<polygon points="${points}" fill="none" style="stroke: var(--color-overlay-weak)" stroke-width="1" />`;
   });
 
   // Axis lines & labels
@@ -1219,7 +1226,7 @@ function renderRadarChartSvg(scores) {
     const angle = i * angleSlice - Math.PI / 2;
     const x = center + radius * Math.cos(angle);
     const y = center + radius * Math.sin(angle);
-    axisLines += `<line x1="${center}" y1="${center}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,0.12)" stroke-dasharray="3 3" />`;
+    axisLines += `<line x1="${center}" y1="${center}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" style="stroke: var(--color-overlay)" stroke-dasharray="3 3" />`;
 
     // Label positioning
     const labelRadius = radius + 28;
@@ -1229,10 +1236,10 @@ function renderRadarChartSvg(scores) {
     const color = traitMeta[t].color;
 
     axisLabels += `
-      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="${color}" font-family="'DM Sans', sans-serif" font-size="12" font-weight="700" text-anchor="${anchor}">
+      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" style="fill: ${color}" font-family="'DM Sans', sans-serif" font-size="12" font-weight="700" text-anchor="${anchor}">
         ${t}: ${scores[t].toFixed(1)}
       </text>
-      <text x="${lx.toFixed(1)}" y="${(ly + 13).toFixed(1)}" fill="#8e8ea0" font-family="'DM Sans', sans-serif" font-size="9" text-anchor="${anchor}">
+      <text x="${lx.toFixed(1)}" y="${(ly + 13).toFixed(1)}" style="fill: var(--color-muted)" font-family="'DM Sans', sans-serif" font-size="9" text-anchor="${anchor}">
         ${labels[i]}
       </text>
     `;
@@ -1254,7 +1261,7 @@ function renderRadarChartSvg(scores) {
   let circles = '';
   dataPoints.forEach(p => {
     circles += `
-      <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5" fill="${traitMeta[p.t].color}" stroke="#141417" stroke-width="2">
+      <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5" style="fill: ${traitMeta[p.t].color}; stroke: var(--color-card)" stroke-width="2">
         <title>${traitMeta[p.t].name}: ${p.score.toFixed(1)}</title>
       </circle>
     `;
@@ -1264,14 +1271,14 @@ function renderRadarChartSvg(scores) {
     <svg class="radar-svg" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="rgba(139, 92, 246, 0.45)" />
-          <stop offset="60%" stop-color="rgba(6, 182, 212, 0.3)" />
-          <stop offset="100%" stop-color="rgba(244, 63, 94, 0.15)" />
+          <stop offset="0%" style="stop-color: var(--color-o)" stop-opacity="0.45" />
+          <stop offset="60%" style="stop-color: var(--color-a)" stop-opacity="0.3" />
+          <stop offset="100%" style="stop-color: var(--color-n)" stop-opacity="0.15" />
         </radialGradient>
       </defs>
       ${gridPolygons}
       ${axisLines}
-      <polygon points="${pointsStr}" fill="url(#radarGrad)" stroke="#ffd166" stroke-width="2.5" />
+      <polygon points="${pointsStr}" fill="url(#radarGrad)" style="stroke: var(--color-highlight)" stroke-width="2.5" />
       ${circles}
       ${axisLabels}
     </svg>
@@ -1457,7 +1464,7 @@ function renderResults(scores) {
     return `
       <div class="section-detail">
         <div class="section-header">
-          <div class="section-icon" style="background: rgba(255,255,255,0.06); color: ${meta.color};">
+          <div class="section-icon" style="background: var(--color-overlay-weak); color: ${meta.color};">
             ${meta.icon}
           </div>
           <div>
@@ -1629,5 +1636,7 @@ function resetToQuiz() {
   }
 })();
 </script>
+
+<script type="module" src="src/main-theme.js"></script>
 </body>
 </html>
